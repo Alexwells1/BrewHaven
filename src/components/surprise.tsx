@@ -362,12 +362,6 @@ const SurprisePage: React.FC = () => {
                 </button>
               </div>
             </div>
-
-            {rejectionCount > 0 && (
-              <div className="text-xs text-white/70 bg-black/30 rounded-full py-1 px-3 inline-block">
-                Times you've said no: {rejectionCount}/15
-              </div>
-            )}
           </div>
         )}
 
