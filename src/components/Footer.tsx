@@ -166,9 +166,9 @@ const Footer: React.FC = () => {
                     Our Location
                   </div>
                   <div className="text-gray-300 text-xs sm:text-sm">
-                    123 Coffee Street
+                    123 Telepepe Street
                     <br />
-                    San Francisco, CA 94102
+                    San Semo, CA 94102
                   </div>
                 </div>
               </div>
@@ -190,17 +190,17 @@ const Footer: React.FC = () => {
               <div className="flex items-center gap-3">
                 <Phone className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600 flex-shrink-0" />
                 <a
-                  href="tel:+14155550123"
+                  href="tel:+2349161285212"
                   className="text-gray-300 hover:text-amber-400 transition-colors text-sm sm:text-base"
                 >
-                  (415) 555-0123
+                  (234) 916-128-5212
                 </a>
               </div>
 
               <div className="flex items-center gap-3">
                 <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600 flex-shrink-0" />
                 <a
-                  href="mailto:hello@brewhaven.com"
+                  href="mailto:mikunops@gmail.com"
                   className="text-gray-300 hover:text-amber-400 transition-colors text-sm sm:text-base"
                 >
                   hello@brewhaven.com
@@ -239,9 +239,12 @@ const Footer: React.FC = () => {
             </div>
 
             <div className="flex items-center gap-2 text-gray-400 text-xs sm:text-sm">
-              <span>Made with</span>
-              <Heart className="w-3 h-3 sm:w-4 sm:h-4 text-amber-600 fill-current" />
-              <span>for coffee lovers</span>
+              <span>Made By</span>
+
+              <span className="flex justify-center items-center gap-1">
+                Mikun {"   "}
+                <Heart className="w-3 h-3 sm:w-4 sm:h-4 text-amber-600 fill-current" />
+              </span>
             </div>
           </div>
         </div>

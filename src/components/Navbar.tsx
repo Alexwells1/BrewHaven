@@ -1,38 +1,40 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Menu, X, ShoppingCart, Search, User, Coffee } from "lucide-react";
+import { Link, NavLink } from "react-router-dom";
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
 
-  // Add scroll effect
-  React.useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const navItems = [
-    { name: "Home", href: "#home" },
-    { name: "Menu", href: "#menu" },
-    { name: "Services", href: "#services" },
-    { name: "Blog", href: "#blog" },
-    { name: "About", href: "#about" },
+    { name: "Home", href: "/" },
+    { name: "Menu", href: "/menu" },
+    { name: "Services", href: "/services" },
+    { name: "Blog", href: "/blog" },
+    { name: "About", href: "/about" },
     {
       name: "Store",
-      href: "#store",
+      href: "/store",
       dropdown: [
-        { name: "Coffee Beans", href: "#beans" },
-        { name: "Brewing Gear", href: "#gear" },
-        { name: "Merchandise", href: "#merch" },
-        { name: "Gift Cards", href: "#gifts" },
+        { name: "Coffee Beans", href: "/beans" },
+        { name: "Brewing Gear", href: "/gear" },
+        { name: "Merchandise", href: "/merch" },
+        { name: "Gift Cards", href: "/gifts" },
       ],
     },
-    { name: "Contact", href: "#contact" },
+    { name: "Contact", href: "/contact" },
   ];
+
+  const linkBaseStyle =
+    "text-white/80 hover:text-amber-400 text-sm font-medium px-3 xl:px-4 py-4 xl:py-6 transition-all duration-300 relative group";
+  const activeLinkStyle = "text-amber-400";
 
   return (
     <nav
@@ -50,12 +52,12 @@ const Navbar: React.FC = () => {
               <Coffee className="w-4 h-4 sm:w-6 sm:h-6 text-black" />
             </div>
             <div className="text-left">
-              <a
-                href="#"
+              <Link
+                to="/"
                 className="text-xl sm:text-2xl font-josefin text-white font-bold tracking-tight leading-none"
               >
                 BrewHaven
-              </a>
+              </Link>
               <small className="block text-xs text-amber-400 tracking-widest leading-none">
                 COFFEE ROASTERS
               </small>
@@ -68,15 +70,14 @@ const Navbar: React.FC = () => {
               <div key={item.name} className="relative group">
                 {item.dropdown ? (
                   <div
-                    className="text-white/80 hover:text-amber-400 text-sm font-medium px-3 xl:px-4 py-4 xl:py-6 transition-all duration-300 cursor-pointer relative group"
+                    className={`${linkBaseStyle} cursor-pointer`}
                     onMouseEnter={() => setActiveDropdown(item.name)}
                     onMouseLeave={() => setActiveDropdown(null)}
                   >
                     {item.name}
-                    {/* Animated underline */}
                     <div className="absolute bottom-0 left-3 xl:left-4 right-3 xl:right-4 h-0.5 bg-amber-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
 
-                    {/* Dropdown menu */}
+                    {/* Dropdown */}
                     <div
                       className={`absolute top-full left-0 mt-1 w-48 xl:w-56 bg-black/95 backdrop-blur-xl border border-amber-600/20 rounded-xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 ${
                         activeDropdown === item.name
@@ -85,10 +86,16 @@ const Navbar: React.FC = () => {
                       }`}
                     >
                       {item.dropdown.map((dropdownItem) => (
-                        <a
+                        <NavLink
                           key={dropdownItem.name}
-                          href={dropdownItem.href}
-                          className="block px-4 xl:px-6 py-2 xl:py-3 text-sm text-white/70 hover:text-amber-400 hover:bg-amber-600/10 transition-all duration-200 border-b border-white/5 last:border-b-0 group/item"
+                          to={dropdownItem.href}
+                          className={({ isActive }) =>
+                            `block px-4 xl:px-6 py-2 xl:py-3 text-sm transition-all duration-200 border-b border-white/5 last:border-b-0 group/item ${
+                              isActive
+                                ? "text-amber-400 bg-amber-600/10"
+                                : "text-white/70 hover:text-amber-400 hover:bg-amber-600/10"
+                            }`
+                          }
                           onClick={() => setActiveDropdown(null)}
                         >
                           <span className="flex items-center gap-2 xl:gap-3">
@@ -97,60 +104,51 @@ const Navbar: React.FC = () => {
                               {dropdownItem.name}
                             </span>
                           </span>
-                        </a>
+                        </NavLink>
                       ))}
                     </div>
                   </div>
                 ) : (
-                  <a
-                    href={item.href}
-                    className="text-white/80 hover:text-amber-400 text-sm font-medium px-3 xl:px-4 py-4 xl:py-6 transition-all duration-300 relative group"
+                  <NavLink
+                    to={item.href}
+                    className={({ isActive }) =>
+                      `${linkBaseStyle} ${isActive ? activeLinkStyle : ""}`
+                    }
                   >
                     {item.name}
                     <div className="absolute bottom-0 left-3 xl:left-4 right-3 xl:right-4 h-0.5 bg-amber-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
-                  </a>
+                  </NavLink>
                 )}
               </div>
             ))}
           </div>
 
-          {/* Right side icons */}
+          {/* Right icons */}
           <div className="hidden lg:flex items-center space-x-4 xl:space-x-6">
-            {/* Search */}
-            <button
-              className="text-white/70 hover:text-amber-400 transition-colors duration-300 p-2 hover:bg-white/5 rounded-lg"
-              aria-label="Search"
-            >
+            <button className="text-white/70 hover:text-amber-400 transition-colors duration-300 p-2 hover:bg-white/5 rounded-lg">
               <Search className="w-4 h-4 xl:w-5 xl:h-5" />
             </button>
-
-            {/* User Account */}
-            <button
-              className="text-white/70 hover:text-amber-400 transition-colors duration-300 p-2 hover:bg-white/5 rounded-lg"
-              aria-label="User Account"
-            >
+            <button className="text-white/70 hover:text-amber-400 transition-colors duration-300 p-2 hover:bg-white/5 rounded-lg">
               <User className="w-4 h-4 xl:w-5 xl:h-5" />
             </button>
-
-            {/* Cart */}
-            <a
-              href="#cart"
+            <Link
+              to="/cart"
               className="relative text-white/70 hover:text-amber-400 transition-all duration-300 p-2 hover:bg-white/5 rounded-lg group"
-              aria-label="Shopping Cart"
             >
               <ShoppingCart className="w-4 h-4 xl:w-5 xl:h-5" />
               <span className="absolute -top-1 -right-1 w-4 h-4 xl:w-5 xl:h-5 bg-amber-600 rounded-full flex items-center justify-center text-xs text-black font-bold group-hover:scale-110 transition-transform">
                 2
               </span>
-            </a>
-
-            {/* CTA Button */}
-            <button className="bg-amber-600 hover:bg-amber-700 text-black px-4 xl:px-6 py-2 xl:py-2.5 rounded-lg font-semibold text-sm transition-all duration-300 hover:shadow-lg hover:shadow-amber-600/25 ml-2 xl:ml-4 whitespace-nowrap">
+            </Link>
+            <Link
+              to="/order"
+              className="bg-amber-600 hover:bg-amber-700 text-black px-4 xl:px-6 py-2 xl:py-2.5 rounded-lg font-semibold text-sm transition-all duration-300 hover:shadow-lg hover:shadow-amber-600/25 ml-2 xl:ml-4 whitespace-nowrap"
+            >
               Order Online
-            </button>
+            </Link>
           </div>
 
-          {/* Mobile menu button */}
+          {/* Mobile Menu Toggle */}
           <button
             className="lg:hidden text-white/80 hover:text-amber-400 transition-colors duration-300 p-2 hover:bg-white/5 rounded-lg flex-shrink-0"
             onClick={() => setIsOpen(!isOpen)}
@@ -174,64 +172,72 @@ const Navbar: React.FC = () => {
                   className="border-b border-white/5 last:border-b-0"
                 >
                   {item.dropdown ? (
-                    <div className="space-y-0">
+                    <div>
                       <div className="text-white/80 text-sm font-medium px-3 py-3 sm:py-4 uppercase tracking-wide">
                         {item.name}
                       </div>
-                      <div className="pl-4 sm:pl-6 space-y-0 bg-black/30 rounded-lg">
+                      <div className="pl-4 sm:pl-6 bg-black/30 rounded-lg">
                         {item.dropdown.map((dropdownItem) => (
-                          <a
+                          <NavLink
                             key={dropdownItem.name}
-                            href={dropdownItem.href}
-                            className="block text-white/60 hover:text-amber-400 text-sm px-3 py-2 sm:py-3 transition-colors rounded-lg hover:bg-amber-600/10 border-b border-white/5 last:border-b-0"
+                            to={dropdownItem.href}
+                            className={({ isActive }) =>
+                              `block text-sm px-3 py-2 sm:py-3 transition-colors rounded-lg border-b border-white/5 last:border-b-0 ${
+                                isActive
+                                  ? "text-amber-400 bg-amber-600/10"
+                                  : "text-white/60 hover:text-amber-400 hover:bg-amber-600/10"
+                              }`
+                            }
                             onClick={() => setIsOpen(false)}
                           >
                             {dropdownItem.name}
-                          </a>
+                          </NavLink>
                         ))}
                       </div>
                     </div>
                   ) : (
-                    <a
-                      href={item.href}
-                      className="block text-white/80 hover:text-amber-400 text-sm font-medium px-3 py-3 sm:py-4 transition-colors rounded-lg hover:bg-amber-600/10 uppercase tracking-wide"
+                    <NavLink
+                      to={item.href}
+                      className={({ isActive }) =>
+                        `block text-sm font-medium px-3 py-3 sm:py-4 transition-colors rounded-lg uppercase tracking-wide ${
+                          isActive
+                            ? "text-amber-400 bg-amber-600/10"
+                            : "text-white/80 hover:text-amber-400 hover:bg-amber-600/10"
+                        }`
+                      }
                       onClick={() => setIsOpen(false)}
                     >
                       {item.name}
-                    </a>
+                    </NavLink>
                   )}
                 </div>
               ))}
 
-              {/* Mobile bottom actions */}
+              {/* Mobile Bottom Actions */}
               <div className="flex items-center justify-between pt-4 sm:pt-6 mt-4 border-t border-white/10">
                 <div className="flex space-x-3 sm:space-x-4">
-                  <button
-                    className="text-white/70 hover:text-amber-400 transition-colors p-2"
-                    aria-label="Search"
-                  >
+                  <button className="text-white/70 hover:text-amber-400 transition-colors p-2">
                     <Search className="w-4 h-4 sm:w-5 sm:h-5" />
                   </button>
-                  <button
-                    className="text-white/70 hover:text-amber-400 transition-colors p-2"
-                    aria-label="User Account"
-                  >
+                  <button className="text-white/70 hover:text-amber-400 transition-colors p-2">
                     <User className="w-4 h-4 sm:w-5 sm:h-5" />
                   </button>
-                  <a
-                    href="#cart"
+                  <Link
+                    to="/cart"
                     className="text-white/70 hover:text-amber-400 transition-colors p-2 relative"
-                    aria-label="Shopping Cart"
                   >
                     <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5" />
                     <span className="absolute -top-1 -right-1 w-3 h-3 sm:w-4 sm:h-4 bg-amber-600 rounded-full flex items-center justify-center text-xs text-black font-bold">
                       2
                     </span>
-                  </a>
+                  </Link>
                 </div>
-                <button className="bg-amber-600 hover:bg-amber-700 text-black px-3 sm:px-4 py-2 rounded-lg font-semibold text-sm transition-colors whitespace-nowrap">
+                <Link
+                  to="/order"
+                  className="bg-amber-600 hover:bg-amber-700 text-black px-3 sm:px-4 py-2 rounded-lg font-semibold text-sm transition-colors whitespace-nowrap"
+                >
                   Order Now
-                </button>
+                </Link>
               </div>
             </div>
           </div>
